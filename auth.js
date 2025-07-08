@@ -1,7 +1,7 @@
 // js/auth.js - Authentication and Registration (KOMPLETNĚ OPRAVENÁ VERZE)
 class AuthManager {
     constructor() {
-        this.apiBase = ''; // API soubory jsou v kořenovém adresáři
+        this.apiBase = 'api'; // API soubory jsou v api/ adresáři
         console.log('🔐 AuthManager: Initializing...');
         this.setupEventListeners();
     }
@@ -61,7 +61,7 @@ class AuthManager {
         console.log('📤 Login data:', { email: data.email, password: '[HIDDEN]' });
 
         try {
-            const response = await fetch('login.php', {
+            const response = await fetch(this.apiBase + '/login.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -217,7 +217,7 @@ class AuthManager {
         }
 
         try {
-            const response = await fetch('register.php', {
+            const response = await fetch(this.apiBase + '/register.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -280,7 +280,7 @@ class AuthManager {
         console.log('🚪 Logging out...');
         
         try {
-            await fetch('logout.php', {
+            await fetch(this.apiBase + '/logout.php', {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -339,7 +339,7 @@ class AuthManager {
     // Session management
     async checkSession() {
         try {
-            const response = await fetch('session.php', {
+            const response = await fetch(this.apiBase + '/session.php', {
                 credentials: 'include'
             });
             

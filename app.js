@@ -5,7 +5,7 @@ class CRMApp {
         this.refreshInterval = null;
         this.currentDate = new Date();
         this.selectedDate = null;
-        this.apiBase = ''; // API soubory jsou v kořenovém adresáři
+        this.apiBase = 'api'; // API soubory jsou v api/ adresáři
         
         this.init();
     }
@@ -101,7 +101,7 @@ class CRMApp {
         try {
             console.log('Checking auth status...');
             
-            const response = await fetch('session.php', {
+            const response = await fetch(this.apiBase + '/session.php', {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
@@ -283,7 +283,7 @@ class CRMApp {
     async loadDashboardData() {
         try {
             // Load dashboard statistics
-            const statsResponse = await fetch('bookings.php?dashboard_stats=1', {
+            const statsResponse = await fetch(`${this.apiBase}/bookings.php?dashboard_stats=1`, {
                 credentials: 'include',
                 headers: { 'Accept': 'application/json' }
             });
@@ -299,7 +299,7 @@ class CRMApp {
             }
 
             // Load upcoming bookings
-            const upcomingResponse = await fetch('bookings.php?upcoming=1&limit=5', {
+            const upcomingResponse = await fetch(`${this.apiBase}/bookings.php?upcoming=1&limit=5`, {
                 credentials: 'include',
                 headers: { 'Accept': 'application/json' }
             });
@@ -1290,6 +1290,12 @@ function filterSlotsByDate(date) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Initializing CRM App...');
     window.crmApp = new CRMApp();
+    
+    // Dispatch event when CRM app is ready
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('crmAppReady'));
+        console.log('🚀 CRM App initialization complete');
+    }, 1500);
 });
 
 // Global error handler

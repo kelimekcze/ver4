@@ -1,17 +1,8 @@
 // js/booking.js - Booking Management with Slot Editing and Warehouse Functions (OPRAVENO)
 class BookingManager {
     constructor() {
-        this.apiBase = this.getApiBasePath();
+        this.apiBase = 'api'; // API soubory jsou vždy v api/ adresáři
         this.setupEventListeners();
-    }
-
-    // Automatické určení správné cesty k API
-    getApiBasePath() {
-        const currentPath = window.location.pathname;
-        if (currentPath.includes('/js/')) {
-            return '../api';
-        }
-        return 'api';
     }
 
     setupEventListeners() {
@@ -832,16 +823,27 @@ class BookingManager {
     }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('BookingManager: DOM loaded, initializing...');
-    const bookingManager = new BookingManager();
+// Global booking manager initialization
+console.log('📋 Booking.js loaded');
+
+// Initialize booking manager when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📋 DOM ready, initializing booking manager...');
     
-    // Make it globally available
-    window.bookingManager = bookingManager;
-    window.BookingManager = BookingManager;
-    
-    console.log('✅ BookingManager: Initialized successfully - FIXED VERSION');
+    setTimeout(() => {
+        if (!window.bookingManager) {
+            console.log('📋 Creating BookingManager instance...');
+            window.bookingManager = new BookingManager();
+        }
+    }, 500);
 });
 
-console.log('✅ BookingManager: Module loaded successfully - FIXED VERSION');
+// Initialize when CRM app is ready
+window.addEventListener('crmAppReady', function() {
+    console.log('📋 CRM App ready, ensuring booking manager is initialized...');
+    if (!window.bookingManager) {
+        window.bookingManager = new BookingManager();
+    }
+});
+
+console.log('✅ Booking module fully loaded');
