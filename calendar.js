@@ -34,6 +34,12 @@ class LogisticsCalendar {
     }
 
     async loadWarehouses() {
+        // Nepokoušet se načíst sklady pokud není uživatel přihlášen
+        if (!window.crmApp || !window.crmApp.currentUser) {
+            console.log('ℹ️ Skipping warehouses load - user not logged in');
+            return;
+        }
+        
         try {
             console.log('📦 Načítání skladů...');
             const response = await fetch(`${this.apiBase}/warehouses.php`, {
@@ -50,6 +56,9 @@ class LogisticsCalendar {
                         console.log('✅ Načteno skladů:', this.warehouses.length);
                     }
                 }
+            } else if (response.status === 401) {
+                console.log('⚠️ User not authenticated for warehouses');
+                return;
             }
         } catch (error) {
             console.error('❌ Chyba při načítání skladů:', error);
@@ -158,6 +167,12 @@ class LogisticsCalendar {
     }
 
     async loadSlots() {
+        // Nepokoušet se načíst sloty pokud není uživatel přihlášen
+        if (!window.crmApp || !window.crmApp.currentUser) {
+            console.log('ℹ️ Skipping slots load - user not logged in');
+            return;
+        }
+        
         try {
             console.log('📅 Načítání slotů pro kalendář...');
             
@@ -197,6 +212,10 @@ class LogisticsCalendar {
                 } else {
                     console.error('❌ Prázdná odpověď z API');
                 }
+            } else if (response.status === 401) {
+                console.log('⚠️ User not authenticated for calendar');
+                // Nepokazovat chybu - uživatel prostě není přihlášen
+                return;
             } else {
                 console.error('❌ HTTP chyba:', response.status, response.statusText);
                 this.showError(`Chyba komunikace se serverem (${response.status})`);

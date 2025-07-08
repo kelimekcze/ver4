@@ -89,17 +89,22 @@ class CRMApp {
     }
 
     async setupInitialData() {
-        // Setup forms after auth check
+        // Setup forms after auth check - pouze pokud je uživatel přihlášen
         setTimeout(() => {
-            this.loadWarehousesForForms();
-            this.setupFormHandlers();
-            this.setDefaultFormValues();
+            if (this.currentUser) {
+                console.log('🔧 Setting up initial data for logged user');
+                this.loadWarehousesForForms();
+                this.setupFormHandlers();
+                this.setDefaultFormValues();
+            } else {
+                console.log('ℹ️ Skipping initial data setup - user not logged in');
+            }
         }, 1000);
     }
 
     async checkAuthStatus() {
         try {
-            console.log('Checking auth status...');
+            console.log('🔐 Checking auth status...');
             
             const response = await fetch(this.apiBase + '/session.php', {
                 credentials: 'include',
@@ -108,27 +113,36 @@ class CRMApp {
                 }
             });
             
+            console.log('🔐 Session check response:', response.status);
+            
             if (response.ok) {
                 const text = await response.text();
+                console.log('🔐 Session response text:', text);
+                
                 if (text) {
                     try {
                         const data = JSON.parse(text);
                         if (data.success && data.user) {
+                            console.log('✅ User is logged in:', data.user);
                             this.currentUser = data.user;
                             this.showMainContent();
                             await this.loadDashboardData();
                             this.setupCalendarIntegration();
                             return;
+                        } else {
+                            console.log('ℹ️ No active session, showing login');
                         }
                     } catch (jsonError) {
-                        console.error('Session JSON parse error:', jsonError);
+                        console.error('❌ Session JSON parse error:', jsonError);
                     }
                 }
+            } else {
+                console.log('⚠️ Session check failed with status:', response.status);
             }
             
             this.showLoginScreen();
         } catch (error) {
-            console.error('Auth check failed:', error);
+            console.error('❌ Auth check failed:', error);
             this.showLoginScreen();
         }
     }
@@ -281,7 +295,15 @@ class CRMApp {
 
     // Dashboard Data Management
     async loadDashboardData() {
+        // Nečíst data pokud uživatel není přihlášen
+        if (!this.currentUser) {
+            console.log('ℹ️ Skipping dashboard data load - user not logged in');
+            return;
+        }
+        
         try {
+            console.log('📊 Loading dashboard data...');
+            
             // Load dashboard statistics
             const statsResponse = await fetch(`${this.apiBase}/bookings.php?dashboard_stats=1`, {
                 credentials: 'include',
@@ -296,6 +318,10 @@ class CRMApp {
                         this.updateDashboardStats(statsData.stats);
                     }
                 }
+            } else if (statsResponse.status === 401) {
+                console.log('⚠️ User not authenticated, redirecting to login');
+                this.showLoginScreen();
+                return;
             }
 
             // Load upcoming bookings
@@ -312,11 +338,18 @@ class CRMApp {
                         this.updateUpcomingBookings(upcomingData.bookings);
                     }
                 }
+            } else if (upcomingResponse.status === 401) {
+                console.log('⚠️ User not authenticated, redirecting to login');
+                this.showLoginScreen();
+                return;
             }
 
         } catch (error) {
-            console.error('Failed to load dashboard data:', error);
-            this.showNotification('Chyba při načítání dat dashboardu', 'error');
+            console.error('❌ Failed to load dashboard data:', error);
+            // Nezobrazovat chybu při načítání stránky
+            if (this.currentUser) {
+                this.showNotification('Chyba při načítání dat dashboardu', 'error');
+            }
         }
     }
 

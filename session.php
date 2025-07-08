@@ -22,7 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             ]
         ]);
     } else {
-        http_response_code(401);
+        // NEVRACÍ 401 - to je normální stav, ne chyba
+        http_response_code(200);
         echo json_encode([
             'success' => false,
             'error' => 'No active session'
