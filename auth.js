@@ -105,40 +105,20 @@ class AuthManager {
     }
 
     handleSuccessfulLogin(user) {
-        console.log('🚀 Handling successful login...');
+        console.log('🚀 AUTH: Handling successful login...');
         
-        // Skryjeme login kontejner BEZPEČNĚ
-        const loginContainer = document.getElementById('loginContainer');
-        if (loginContainer) {
-            loginContainer.style.display = 'none';
-        }
+        // NEMĚNÍME ZOBRAZENÍ - to nechme na CRM App
+        // Jen nastavíme uživatele a zavoláme CRM App
         
-        const registerContainer = document.getElementById('registerContainer');
-        if (registerContainer) {
-            registerContainer.style.display = 'none';
-        }
-        
-        // Zobrazíme main content BEZPEČNĚ
-        const appContainer = document.getElementById('appContainer');
-        if (appContainer) {
-            appContainer.style.display = 'block';
-        } else {
-            console.error('❌ appContainer not found! Check HTML structure.');
-            this.showError('Chyba aplikace: hlavní kontejner nenalezen');
-            return;
-        }
-        
-        // Aktualizujeme user info
-        this.updateUserInfo(user);
-        
-        // Inicializujeme CRM App pokud existuje
         if (window.crmApp) {
-            console.log('🔗 Setting current user in CRM App');
+            console.log('🔗 AUTH: Setting current user and calling showMainContent');
             window.crmApp.currentUser = user;
+            window.crmApp.showMainContent();
             window.crmApp.showNotification('Úspěšně přihlášen!', 'success');
-            window.crmApp.loadDashboardData();
+            // Zavoláme znovu checkAuthStatus aby se správně načetla data
+            window.crmApp.checkAuthStatus();
         } else {
-            console.warn('⚠️ CRM App not found, will initialize later');
+            console.warn('⚠️ AUTH: CRM App not found, will initialize later');
             // Počkáme na CRM App
             this.waitForCrmApp(user);
         }
@@ -148,17 +128,19 @@ class AuthManager {
         const maxAttempts = 10;
         
         if (window.crmApp) {
-            console.log('🔗 CRM App found, initializing...');
+            console.log('🔗 AUTH: CRM App found after waiting, initializing...');
             window.crmApp.currentUser = user;
+            window.crmApp.showMainContent();
             window.crmApp.showNotification('Úspěšně přihlášen!', 'success');
-            window.crmApp.loadDashboardData();
+            // Zavoláme znovu checkAuthStatus aby se správně načetla data
+            window.crmApp.checkAuthStatus();
         } else if (attempts < maxAttempts) {
-            console.log(`⏳ Waiting for CRM App... (${attempts + 1}/${maxAttempts})`);
+            console.log(`⏳ AUTH: Waiting for CRM App... (${attempts + 1}/${maxAttempts})`);
             setTimeout(() => {
                 this.waitForCrmApp(user, attempts + 1);
             }, 500);
         } else {
-            console.error('❌ CRM App not available after waiting');
+            console.error('❌ AUTH: CRM App not available after waiting');
             this.showError('Aplikace se nenačetla správně. Obnovte stránku.');
         }
     }

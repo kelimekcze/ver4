@@ -104,7 +104,16 @@ class CRMApp {
 
     async checkAuthStatus() {
         try {
-            console.log('🔐 Checking auth status...');
+            console.log('🔐 NOVÁ VERZE - Checking auth status...');
+            
+            // Pokud už máme uživatele (z přihlášení), jen načteme data
+            if (this.currentUser) {
+                console.log('👤 User already set, loading dashboard data...');
+                this.showMainContent();
+                await this.loadDashboardData();
+                this.setupCalendarIntegration();
+                return;
+            }
             
             const response = await fetch(this.apiBase + '/session.php', {
                 credentials: 'include',
@@ -122,25 +131,31 @@ class CRMApp {
                 if (text) {
                     try {
                         const data = JSON.parse(text);
+                        console.log('🔐 Parsed session data:', data);
+                        
                         if (data.success && data.user) {
                             console.log('✅ User is logged in:', data.user);
                             this.currentUser = data.user;
+                            console.log('🎯 Calling showMainContent()...');
                             this.showMainContent();
+                            console.log('📊 Loading dashboard data...');
                             await this.loadDashboardData();
                             this.setupCalendarIntegration();
                             return;
                         } else {
-                            console.log('ℹ️ No active session, showing login');
+                            console.log('ℹ️ No active session, showing login screen');
+                            this.showLoginScreen();
                         }
                     } catch (jsonError) {
                         console.error('❌ Session JSON parse error:', jsonError);
+                        this.showLoginScreen();
                     }
                 }
             } else {
                 console.log('⚠️ Session check failed with status:', response.status);
+                this.showLoginScreen();
             }
             
-            this.showLoginScreen();
         } catch (error) {
             console.error('❌ Auth check failed:', error);
             this.showLoginScreen();
@@ -188,15 +203,40 @@ class CRMApp {
     }
 
     showMainContent() {
-        document.getElementById('loginContainer').style.display = 'none';
+        console.log('🎯 showMainContent() called');
+        
+        const loginContainer = document.getElementById('loginContainer');
         const registerContainer = document.getElementById('registerContainer');
+        const appContainer = document.getElementById('appContainer');
+        
+        console.log('🎯 Elements found:', {
+            loginContainer: !!loginContainer,
+            registerContainer: !!registerContainer,
+            appContainer: !!appContainer
+        });
+        
+        if (loginContainer) {
+            loginContainer.style.display = 'none';
+            console.log('✅ Login container hidden');
+        }
+        
         if (registerContainer) {
             registerContainer.style.display = 'none';
+            console.log('✅ Register container hidden');
         }
-        document.getElementById('appContainer').style.display = 'block';
+        
+        if (appContainer) {
+            appContainer.style.display = 'block';
+            console.log('✅ App container shown');
+        } else {
+            console.error('❌ App container not found!');
+            return;
+        }
         
         this.updateUserInfo();
         this.setupAdminVisibility();
+        
+        console.log('🎯 showMainContent() completed');
     }
 
     showLoginScreen() {
@@ -209,11 +249,15 @@ class CRMApp {
     }
 
     updateUserInfo() {
-        if (!this.currentUser) return;
+        if (!this.currentUser) {
+            console.log('⚠️ No current user for updateUserInfo');
+            return;
+        }
+        
+        console.log('👤 Updating user info for:', this.currentUser);
         
         const elements = {
-            userName: this.currentUser.full_name,
-            userAvatar: this.currentUser.full_name.charAt(0).toUpperCase(),
+            userDisplayName: this.currentUser.full_name,
             userRole: this.getUserRoleText(this.currentUser.user_type)
         };
 
@@ -221,6 +265,9 @@ class CRMApp {
             const element = document.getElementById(id);
             if (element) {
                 element.textContent = value;
+                console.log(`✅ Updated ${id}: ${value}`);
+            } else {
+                console.warn(`⚠️ Element not found: ${id}`);
             }
         });
     }
