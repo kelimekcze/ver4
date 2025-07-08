@@ -2,17 +2,8 @@
 class DashboardManager {
     constructor() {
         this.refreshInterval = null;
-        this.apiBase = this.getApiBasePath();
+        this.apiBase = 'api'; // API soubory jsou vždy v api/ adresáři
         this.lastRefresh = null;
-    }
-
-    // Automatické určení správné cesty k API - OPRAVENO pro vaši strukturu
-    getApiBasePath() {
-        const currentPath = window.location.pathname;
-        if (currentPath.includes('/js/')) {
-            return '../api';
-        }
-        return 'api';
     }
 
     init() {

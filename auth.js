@@ -1,7 +1,7 @@
 // js/auth.js - Authentication and Registration (KOMPLETNĚ OPRAVENÁ VERZE)
 class AuthManager {
     constructor() {
-        this.apiBase = 'api';
+        this.apiBase = 'api'; // API soubory jsou v api/ adresáři
         console.log('🔐 AuthManager: Initializing...');
         this.setupEventListeners();
     }

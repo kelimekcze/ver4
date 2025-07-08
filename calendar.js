@@ -1082,3 +1082,49 @@ window.addEventListener('error', (event) => {
 });
 
 console.log('📅 Calendar.js loaded successfully');
+
+// Globální inicializace kalendáře
+console.log('📅 Calendar.js loaded');
+
+// Initialize calendar when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📅 DOM ready, initializing calendar...');
+    
+    // Initialize calendar after a short delay to ensure all dependencies are loaded
+    setTimeout(() => {
+        if (!window.logisticsCalendar) {
+            console.log('📅 Creating LogisticsCalendar instance...');
+            window.logisticsCalendar = new LogisticsCalendar();
+        }
+    }, 1000);
+});
+
+// Initialize when CRM app is ready
+window.addEventListener('crmAppReady', function() {
+    console.log('📅 CRM App ready, ensuring calendar is initialized...');
+    if (!window.logisticsCalendar) {
+        window.logisticsCalendar = new LogisticsCalendar();
+    }
+});
+
+// Manual initialization function
+function initializeCalendar() {
+    console.log('📅 Manual calendar initialization...');
+    if (window.logisticsCalendar) {
+        console.log('📅 Calendar already exists, refreshing...');
+        window.logisticsCalendar.refresh();
+    } else {
+        console.log('📅 Creating new calendar instance...');
+        window.logisticsCalendar = new LogisticsCalendar();
+    }
+}
+
+// Export functions for global access
+window.initializeCalendar = initializeCalendar;
+window.refreshCalendar = function() {
+    if (window.logisticsCalendar) {
+        window.logisticsCalendar.refresh();
+    }
+};
+
+console.log('✅ Calendar module fully loaded');

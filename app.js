@@ -5,7 +5,7 @@ class CRMApp {
         this.refreshInterval = null;
         this.currentDate = new Date();
         this.selectedDate = null;
-        this.apiBase = 'api'; // Vždy používáme relativní cestu z root
+        this.apiBase = 'api'; // API soubory jsou v api/ adresáři
         
         this.init();
     }
@@ -179,7 +179,7 @@ class CRMApp {
         if (registerContainer) {
             registerContainer.style.display = 'none';
         }
-        document.getElementById('mainContent').style.display = 'block';
+        document.getElementById('appContainer').style.display = 'block';
         
         this.updateUserInfo();
         this.setupAdminVisibility();
@@ -191,7 +191,7 @@ class CRMApp {
         if (registerContainer) {
             registerContainer.style.display = 'none';
         }
-        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'none';
     }
 
     updateUserInfo() {
@@ -1290,6 +1290,12 @@ function filterSlotsByDate(date) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Initializing CRM App...');
     window.crmApp = new CRMApp();
+    
+    // Dispatch event when CRM app is ready
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('crmAppReady'));
+        console.log('🚀 CRM App initialization complete');
+    }, 1500);
 });
 
 // Global error handler
