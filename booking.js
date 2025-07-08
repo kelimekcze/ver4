@@ -1,7 +1,7 @@
 // js/booking.js - Booking Management with Slot Editing and Warehouse Functions (OPRAVENO)
 class BookingManager {
     constructor() {
-        this.apiBase = 'api'; // API soubory jsou vždy v api/ adresáři
+        this.apiBase = 'api/'; // API soubory jsou v api/ adresáři
         this.setupEventListeners();
     }
 
@@ -95,7 +95,7 @@ class BookingManager {
         try {
             console.log('BookingManager: Loading slot for edit:', slotId);
             
-            const response = await fetch(`${this.apiBase}/slots.php?id=${slotId}`, {
+            const response = await fetch(`${this.apiBase}slots.php?id=${slotId}`, {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
@@ -199,7 +199,7 @@ class BookingManager {
         }
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php`, {
+            const response = await fetch(`${this.apiBase}slots.php`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -404,7 +404,7 @@ class BookingManager {
         }
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php?warehouse_id=${warehouseId}&date=${date}`, {
+            const response = await fetch(`${this.apiBase}slots.php?warehouse_id=${warehouseId}&date=${date}`, {
                 credentials: 'include'
             });
             
@@ -463,7 +463,7 @@ class BookingManager {
         }
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php?warehouse_id=${warehouseId}&date=${date}&include_current=${currentSlotId}`, {
+            const response = await fetch(`${this.apiBase}slots.php?warehouse_id=${warehouseId}&date=${date}&include_current=${currentSlotId}`, {
                 credentials: 'include'
             });
             
@@ -786,7 +786,7 @@ class BookingManager {
 
     async loadWarehousesForForm(selectId) {
         try {
-            const response = await fetch(`${this.apiBase}/warehouses.php`, {
+            const response = await fetch(`${this.apiBase}warehouses.php`, {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'

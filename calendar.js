@@ -42,7 +42,7 @@ class LogisticsCalendar {
         
         try {
             console.log('📦 Načítání skladů...');
-            const response = await fetch(`${this.apiBase}/warehouses.php`, {
+            const response = await fetch(`${this.apiBase}warehouses.php`, {
                 credentials: 'include',
                 headers: { 'Accept': 'application/json' }
             });
@@ -185,7 +185,7 @@ class LogisticsCalendar {
 
             console.log(`📅 Načítání slotů od ${dateFrom} do ${dateTo}`);
 
-            let url = `${this.apiBase}/slots.php?date_from=${dateFrom}&date_to=${dateTo}`;
+            let url = `${this.apiBase}slots.php?date_from=${dateFrom}&date_to=${dateTo}`;
             if (this.selectedWarehouse) {
                 url += `&warehouse_id=${this.selectedWarehouse}`;
             }
@@ -380,7 +380,7 @@ class LogisticsCalendar {
         console.log(`🎯 Přesun slotu ${this.draggedSlot.id} na ${targetDate} ${targetTime}`);
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php`, {
+            const response = await fetch(`${this.apiBase}slots.php`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -506,7 +506,7 @@ class LogisticsCalendar {
         console.log('💾 Vytváření nového slotu:', slotData);
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php`, {
+            const response = await fetch(`${this.apiBase}slots.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -533,7 +533,7 @@ class LogisticsCalendar {
         console.log('✏️ Úprava slotu:', slotId);
         
         try {
-            const response = await fetch(`${this.apiBase}/slots.php?id=${slotId}`, {
+            const response = await fetch(`${this.apiBase}slots.php?id=${slotId}`, {
                 credentials: 'include'
             });
 
@@ -644,7 +644,7 @@ class LogisticsCalendar {
         console.log('💾 Úprava slotu:', slotData);
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php`, {
+            const response = await fetch(`${this.apiBase}slots.php`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -672,7 +672,7 @@ class LogisticsCalendar {
         console.log('🗑️ Mazání slotu:', slotId);
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php`, {
+            const response = await fetch(`${this.apiBase}slots.php`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

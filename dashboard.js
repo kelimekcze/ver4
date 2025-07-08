@@ -2,7 +2,7 @@
 class DashboardManager {
     constructor() {
         this.refreshInterval = null;
-        this.apiBase = 'api'; // API soubory jsou vždy v api/ adresáři
+        this.apiBase = 'api/'; // API soubory jsou v api/ adresáři
         this.lastRefresh = null;
     }
 
@@ -127,7 +127,7 @@ class DashboardManager {
     // Quick actions for dashboard
     async getQuickStats() {
         try {
-            const response = await fetch(`${this.apiBase}/bookings.php?quick_stats=1`, {
+            const response = await fetch(`${this.apiBase}bookings.php?quick_stats=1`, {
                 credentials: 'include'
             });
             
@@ -149,7 +149,7 @@ class DashboardManager {
     // Performance metrics
     async loadPerformanceMetrics() {
         try {
-            const response = await fetch(`${this.apiBase}/bookings.php?performance=1&days=30`, {
+            const response = await fetch(`${this.apiBase}bookings.php?performance=1&days=30`, {
                 credentials: 'include'
             });
             
@@ -191,7 +191,7 @@ class DashboardManager {
     // Alert system for critical issues
     async checkCriticalAlerts() {
         try {
-            const response = await fetch(`${this.apiBase}/alerts.php?critical=1`, {
+            const response = await fetch(`${this.apiBase}alerts.php?critical=1`, {
                 credentials: 'include'
             });
             
@@ -220,7 +220,7 @@ class DashboardManager {
     // Data export functionality
     async exportDashboardData(format = 'csv') {
         try {
-            const response = await fetch(`${this.apiBase}/export.php?type=dashboard&format=${format}`, {
+            const response = await fetch(`${this.apiBase}export.php?type=dashboard&format=${format}`, {
                 credentials: 'include'
             });
             

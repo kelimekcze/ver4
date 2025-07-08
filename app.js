@@ -5,7 +5,7 @@ class CRMApp {
         this.refreshInterval = null;
         this.currentDate = new Date();
         this.selectedDate = null;
-        this.apiBase = 'api'; // API soubory jsou v api/ adresáři
+        this.apiBase = 'api/'; // API soubory jsou v api/ adresáři
         
         this.init();
     }
@@ -115,7 +115,7 @@ class CRMApp {
                 return;
             }
             
-            const response = await fetch(this.apiBase + '/session.php', {
+            const response = await fetch(this.apiBase + 'session.php', {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
@@ -352,7 +352,7 @@ class CRMApp {
             console.log('📊 Loading dashboard data...');
             
             // Load dashboard statistics
-            const statsResponse = await fetch(`${this.apiBase}/bookings.php?dashboard_stats=1`, {
+            const statsResponse = await fetch(`${this.apiBase}bookings.php?dashboard_stats=1`, {
                 credentials: 'include',
                 headers: { 'Accept': 'application/json' }
             });
@@ -372,7 +372,7 @@ class CRMApp {
             }
 
             // Load upcoming bookings
-            const upcomingResponse = await fetch(`${this.apiBase}/bookings.php?upcoming=1&limit=5`, {
+            const upcomingResponse = await fetch(`${this.apiBase}bookings.php?upcoming=1&limit=5`, {
                 credentials: 'include',
                 headers: { 'Accept': 'application/json' }
             });
@@ -597,7 +597,7 @@ class CRMApp {
 
     async editSlot(slotId) {
         try {
-            const response = await fetch(`${this.apiBase}/slots.php?id=${slotId}`, {
+            const response = await fetch(`${this.apiBase}slots.php?id=${slotId}`, {
                 credentials: 'include'
             });
 
@@ -618,7 +618,7 @@ class CRMApp {
         if (!confirm('Opravdu smazat tento slot?')) return;
 
         try {
-            const response = await fetch(`${this.apiBase}/slots.php`, {
+            const response = await fetch(`${this.apiBase}slots.php`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -703,7 +703,7 @@ class CRMApp {
 
     async loadWarehousesForForms() {
         try {
-            const response = await fetch(`${this.apiBase}/warehouses.php`, {
+            const response = await fetch(`${this.apiBase}warehouses.php`, {
                 credentials: 'include'
             });
             
@@ -748,7 +748,7 @@ class CRMApp {
     // Data loading methods
     async loadAllBookings() {
         try {
-            const response = await fetch(`${this.apiBase}/bookings.php`, {
+            const response = await fetch(`${this.apiBase}bookings.php`, {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
@@ -805,7 +805,7 @@ class CRMApp {
 
     async loadAllSlots() {
         try {
-            const response = await fetch(`${this.apiBase}/slots.php`, {
+            const response = await fetch(`${this.apiBase}slots.php`, {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
@@ -868,7 +868,7 @@ class CRMApp {
     async loadAllWarehouses() {
         console.log('CRMApp: Loading all warehouses...');
         try {
-            const response = await fetch(`${this.apiBase}/warehouses.php`, {
+            const response = await fetch(`${this.apiBase}warehouses.php`, {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
@@ -928,7 +928,7 @@ class CRMApp {
         
         try {
             // Načteme data skladu
-            const response = await fetch(`${this.apiBase}/warehouses.php?id=${warehouseId}`, {
+            const response = await fetch(`${this.apiBase}warehouses.php?id=${warehouseId}`, {
                 credentials: 'include'
             });
             
@@ -966,7 +966,7 @@ class CRMApp {
         if (!confirm('Opravdu smazat tento sklad? Tato akce je nevratná.')) return;
 
         try {
-            const response = await fetch(`${this.apiBase}/warehouses.php`, {
+            const response = await fetch(`${this.apiBase}warehouses.php`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -988,7 +988,7 @@ class CRMApp {
 
     async loadAllUsers() {
         try {
-            const response = await fetch(`${this.apiBase}/user.php`, {
+            const response = await fetch(`${this.apiBase}user.php`, {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
@@ -1040,7 +1040,7 @@ class CRMApp {
 
     async editUser(userId) {
         try {
-            const response = await fetch(`${this.apiBase}/user.php?id=${userId}`, {
+            const response = await fetch(`${this.apiBase}user.php?id=${userId}`, {
                 credentials: 'include'
             });
 
@@ -1080,7 +1080,7 @@ class CRMApp {
         if (!confirm('Opravdu smazat tohoto uživatele?')) return;
 
         try {
-            const response = await fetch(`${this.apiBase}/user.php`, {
+            const response = await fetch(`${this.apiBase}user.php`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -1138,7 +1138,7 @@ class CRMApp {
     // Booking detail view
     async viewBookingDetail(bookingId) {
         try {
-            const response = await fetch(`${this.apiBase}/bookings.php?id=${bookingId}`, {
+            const response = await fetch(`${this.apiBase}bookings.php?id=${bookingId}`, {
                 credentials: 'include'
             });
 
